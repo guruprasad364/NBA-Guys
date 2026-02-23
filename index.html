@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NBA Squad - NeverBreakAgain</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Orbitron', sans-serif;
+    color:white;
+    overflow:hidden;
+    position:relative;
+    height:100vh;
+}
+
+/* 🔥 MAIN WEBSITE BACKGROUND */
+body::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+        radial-gradient(circle at center, rgba(255,60,0,0.2) 0%, transparent 50%),
+        linear-gradient(120deg,#000000,#1a0000,#000000);
+    z-index:-3;
+}
+
+/* 🔥 Moving Light Beam */
+body::after{
+    content:"";
+    position:absolute;
+    width:200%;
+    height:200%;
+    background:linear-gradient(45deg, transparent 40%, rgba(255,60,0,0.15) 50%, transparent 60%);
+    animation:beamMove 6s linear infinite;
+    z-index:-2;
+}
+
+@keyframes beamMove{
+    from{transform:translateX(-50%) translateY(-50%) rotate(0deg);}
+    to{transform:translateX(-50%) translateY(-50%) rotate(360deg);}
+}
+
+/* 🔥 Floating Particles */
+.particles{
+    position:absolute;
+    inset:0;
+    z-index:-1;
+}
+
+.particles span{
+    position:absolute;
+    width:4px;
+    height:4px;
+    background:#ff3c00;
+    border-radius:50%;
+    animation:floatParticles 10s linear infinite;
+    opacity:0.6;
+}
+
+@keyframes floatParticles{
+    from{transform:translateY(100vh) scale(0.5);}
+    to{transform:translateY(-10vh) scale(1);}
+}
+
+/* 🎯 Center Content */
+.container{
+    text-align:center;
+    padding-top:120px;
+}
+
+h1{
+    font-size:80px;
+    font-weight:900;
+    background:linear-gradient(90deg,#ff3c00,#ffae00);
+   background-clip: text;
+-webkit-background-clip: text;
+color: transparent;
+-webkit-text-fill-color: transparent;
+    text-shadow:0 0 60px rgba(255,60,0,0.8);
+    letter-spacing:8px;
+}
+
+p{
+    margin-top:10px;
+    color:#bbb;
+    font-size:18px;
+}
+
+/* 🚀 Button */
+button{
+    margin-top:50px;
+    padding:15px 50px;
+    font-size:16px;
+    border:none;
+    border-radius:50px;
+    background:linear-gradient(90deg,#ff3c00,#ffae00);
+    color:white;
+    cursor:pointer;
+    font-weight:bold;
+    letter-spacing:2px;
+    transition:0.4s;
+    box-shadow:0 0 30px rgba(255,60,0,0.6);
+}
+
+button:hover{
+    transform:scale(1.1);
+    box-shadow:0 0 60px rgba(255,60,0,1);
+}
+
+/* 🌑 Overlay */
+.overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.95);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    opacity:0;
+    visibility:hidden;
+    transition:0.6s ease;
+}
+
+.overlay.active{
+    opacity:1;
+    visibility:visible;
+}
+
+/* 🎬 Player Card */
+.player-card{
+    text-align:center;
+    opacity:0;
+    transform:translateY(60px) scale(0.8);
+    transition:0.8s ease;
+}
+
+.player-card.show{
+    opacity:1;
+    transform:translateY(0) scale(1);
+}
+
+.img-box{
+    width:280px;
+    height:380px;
+    border-radius:25px;
+    overflow:hidden;
+    margin:auto;
+    border:2px solid #ff3c00;
+    box-shadow:0 0 60px rgba(255,60,0,0.8);
+    transition:0.5s ease;
+}
+
+.img-box img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.img-box.final-poster{
+    width:500px;
+    height:600px;
+    border:3px solid #ffae00;
+    box-shadow:0 0 90px rgba(255,174,0,1);
+}
+
+.role{
+    margin-top:25px;
+    font-size:18px;
+    letter-spacing:5px;
+    color:#ffae00;
+}
+
+.name{
+    font-size:34px;
+    margin-top:10px;
+    font-weight:700;
+    background:linear-gradient(90deg,#ffffff,#ffae00);
+    background-clip: text;
+-webkit-background-clip: text;
+color: transparent;
+-webkit-text-fill-color: transparent;
+    -webkit-text-fill-color:transparent;
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🔥 Particle Generator -->
+<div class="particles" id="particles"></div>
+
+<div class="container">
+    <h1>NBA</h1>
+    <p>NeverBreakAgain - BGMI Squad</p>
+    <button onclick="startIntro()">Activate Squad</button>
+</div>
+
+<div class="overlay" id="overlay">
+    <div class="player-card" id="playerCard">
+        <div class="img-box" id="imgBox">
+            <img id="playerImg" src="" alt="Player">
+        </div>
+        <div class="role" id="playerRole"></div>
+        <div class="name" id="playerName"></div>
+    </div>
+</div>
+
+<script>
+
+/* 🔥 Generate Particles */
+const particleContainer = document.getElementById("particles");
+for(let i=0;i<40;i++){
+    let span=document.createElement("span");
+    span.style.left=Math.random()*100+"%";
+    span.style.animationDuration=(5+Math.random()*10)+"s";
+    span.style.opacity=Math.random();
+    particleContainer.appendChild(span);
+}
+
+/* Squad Intro Logic */
+const squad = [
+    { role: "IGL", name: "NBA Luffy", img: "images/luffy.jpeg" },
+    { role: "Assaulter", name: "NBA Youngboi", img: "images/you.jpeg" },
+    { role: "Fragger", name: "NBA Levi", img: "images/levi.jpeg" },
+    { role: "Rusher", name: "ALIEN Kiran", img: "images/kir.jpeg" }
+];
+
+function startIntro(){
+
+    const overlay = document.getElementById("overlay");
+    const card = document.getElementById("playerCard");
+    const img = document.getElementById("playerImg");
+    const role = document.getElementById("playerRole");
+    const name = document.getElementById("playerName");
+    const imgBox = document.getElementById("imgBox");
+
+    overlay.classList.add("active");
+
+    let index = 0;
+
+    function showPlayer(){
+
+        if(index < squad.length){
+
+            card.classList.remove("show");
+            imgBox.classList.remove("final-poster");
+
+            setTimeout(()=>{
+                img.src = squad[index].img;
+                role.innerText = squad[index].role;
+                name.innerText = squad[index].name;
+                card.classList.add("show");
+                index++;
+                setTimeout(showPlayer, 2200);
+            },400);
+
+        } else {
+
+            card.classList.remove("show");
+
+            setTimeout(()=>{
+                img.src = "images/NBA.png";
+                role.innerText = "";
+                name.innerText = "";
+                imgBox.classList.add("final-poster");
+                card.classList.add("show");
+                setTimeout(()=>{
+                    overlay.classList.remove("active");
+                },4000);
+            },600);
+        }
+    }
+
+    showPlayer();
+}
+
+</script>
+
+</body>
+</html>
